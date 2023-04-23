@@ -16,8 +16,8 @@ from telegram import (
 from model.data import DB
 from . import view
 
-START_ROUTES, CHECK_INPUT_ROUTES = range(2)
-ONE, TWO, THREE, FOUR = range(4)
+START_ROUTES, CHECK_INPUT_ROUTES, INPUT_TITLE = range(3)
+
 
 
 #TODO спросить нельзя ои в отдельный класс для реализации или разбить весь файл на маленькие подмодули
@@ -56,13 +56,30 @@ async def __back_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def __insert_url(update:Update, context:ContextTypes.DEFAULT_TYPE):
-    """вставляем ссылку в базу данных и выводим главную клавиатуру """
+    """ввод пользователя ссылку на авито и выводим ввод titl """
+
+    #сохраняем url от пользовалеля что бы сделать title
+    url = update.message.text
+    user_data = context.user_data
+    user_data['url'] = url
+    
+    reply_markup = InlineKeyboardMarkup(view.back_button)
+    await update.message.reply_text(text="введите описание для введенной ссылки", reply_markup=reply_markup)
+
+    return INPUT_TITLE
+
+
+async def __input_title_from_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     id = update.message.from_user.id
-    message = update.message.text
+    title = update.message.text
+    user_data = context.user_data
 
-    DB.insert_user_url_in_arr(user_id=id,insert_user_url=message)
+    DB.insert_user_url_in_arr(user_id=id,insert_user_url=user_data['url'])
+    DB.set_title_url(user_id=id, user_url=user_data['url'], title=title)
 
-    await update.message.reply_text(f"ссылка внесена", reply_markup=view.main_keyboard)
+    user_data.clear()
+
+    await update.message.reply_text(f"ссылка и описание внесенны", reply_markup=view.main_keyboard)
     return ConversationHandler.END
 
 
@@ -85,9 +102,7 @@ async def information_about_task(update: Update, context: ContextTypes.DEFAULT_T
     pass
 
 def tasks() -> ConversationHandler:
-    #TODO white routes this place >>
-    
-    #   >>
+    ONE, TWO, THREE, FOUR = range(4)
 
     task_handler = ConversationHandler(
             entry_points=[MessageHandler(filters.Regex("^🗃Задачи$"),__tasks)],
@@ -103,7 +118,10 @@ def tasks() -> ConversationHandler:
                     MessageHandler(filters.Regex("^(https://www.avito.ru/|https://www.m.avito.ru)"), __insert_url),
                     MessageHandler(filters.TEXT, __check_insert_url)
                 ],
-
+                INPUT_TITLE: [
+                    MessageHandler(filters.TEXT, __input_title_from_user)
+                ],
+                
             },
             fallbacks=[CommandHandler("start", ... )],
         )

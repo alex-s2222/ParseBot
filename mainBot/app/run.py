@@ -14,7 +14,7 @@ def run():
     app = Application.builder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", main.start))
-    app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$')),main.account )
+    app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$'),main.account))
     app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), None))
     #Перенести в message??
     app.add_handler(MessageHandler(filters.Regex("^💳 Продлить подписку$"), None))
