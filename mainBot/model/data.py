@@ -1,4 +1,5 @@
 from model.create import get_database
+# from create import get_database
 
 
 class DB:
@@ -68,9 +69,8 @@ class DB:
         user_data = collection.find_one({'_id':user_id},({'urls':{'$elemMatch':{'user_url':user_url}}}))
         return user_data['urls'][0]['title']
 
-# if __name__ == '__main__':
-#     DB.insert_default_user(1)
-#     DB.insert_user_url_in_arr(1,'popo')
-#     DB.insert_user_url_in_arr(1,'lolo')
-#     DB.set_title_url(1,'lolo','hui')
-#     print(DB.get_title_url(1,'lolo'))
+    def get_urls(user_id: int) -> dict:
+        collection = get_database()
+        user_data = collection.find_one({'_id':user_id})
+        return user_data['urls']
+    

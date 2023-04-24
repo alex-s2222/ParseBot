@@ -22,3 +22,8 @@ back_button = [
 ]
 
 main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, one_time_keyboard=True, resize_keyboard=True)
+
+
+#TODO нужно сделать проверку на уникальность вводимых title 
+def create_url_button(titles: dict) -> 'buttons':
+    pass
