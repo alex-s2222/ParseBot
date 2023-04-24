@@ -62,7 +62,7 @@ class DB:
         collection = get_database()
         collection.update_one({'_id': user_id,'urls':{'$elemMatch':{'user_url':user_url}}},{'$set':{'urls.$.title':title}})
 
-    
+    #мб удалить 
     def get_title_url(user_id: int, user_url:str) -> str:
         """получаем краткое описание url"""
         collection = get_database()

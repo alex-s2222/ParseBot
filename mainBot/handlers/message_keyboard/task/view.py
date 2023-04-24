@@ -2,6 +2,7 @@ from telegram import (
     InlineKeyboardButton,
     ReplyKeyboardMarkup
 )
+from typing import List
 
 from handlers.main_keyboard.view import MENUKEYBOARD
 
@@ -25,5 +26,8 @@ main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, one_time_keyboard=True, resize
 
 
 #TODO нужно сделать проверку на уникальность вводимых title 
-def create_url_button(titles: dict) -> 'buttons':
-    pass
+def create_title_button(titles: list) -> List[InlineKeyboardButton] :
+    titles_keyboard = [ ]
+    for i , title in enumerate(titles):
+            titles_keyboard.append([InlineKeyboardButton(title, callback_data=str(i))])
+    return titles_keyboard

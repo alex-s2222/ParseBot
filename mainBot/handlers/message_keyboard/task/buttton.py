@@ -55,7 +55,7 @@ async def __back_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def __insert_url(update:Update, context:ContextTypes.DEFAULT_TYPE):
-    """ввод пользователя ссылку на авито и выводим ввод titl """
+    """ввод пользователя ссылку на авито и выводим ввод title"""
 
     #сохраняем url от пользовалеля что бы сделать title
     url = update.message.text
@@ -95,8 +95,16 @@ async def __check_insert_url(update:Update, context: ContextTypes.DEFAULT_TYPE):
 async def edit_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pass
 
-async def delete_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
+# переименовать функцию и придумать отдельный метод для вывода кнопок
+async def __delete_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    id = update.callback_query.from_user.id
+    query = update.callback_query
+    await query.answer()
+
+    urls = DB.get_urls(user_id=id)
+    titles = [url['title'] for url in urls]
+    reply_markup = InlineKeyboardMarkup(view.create_title_button(titles=titles))
+    await query.edit_message_text(f"выберите задачу", reply_markup=reply_markup)
 
 
 #TODO придумать как убрать последнюю ссылку  (не особо важное )
@@ -114,7 +122,6 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     for url in urls:
         output_message += '\t________' + url['title'] + '________\n' + url['user_url'] + '\n\n'
 
-    # await update.message.reply_text(f"{output_message}") 
     await query.message.reply_text(f"{output_message}") 
 
 
@@ -127,7 +134,7 @@ def tasks() -> ConversationHandler:
                 START_ROUTES: [
                     CallbackQueryHandler(__create_task, pattern="^" + str(ONE) + "$"),
                     CallbackQueryHandler(edit_task, pattern="^" + str(TWO) + "$"),
-                    CallbackQueryHandler(delete_task, pattern="^" + str(THREE) + "$"),
+                    CallbackQueryHandler(__delete_task, pattern="^" + str(THREE) + "$"),
                     CallbackQueryHandler(__information_about_task, pattern="^" + str(FOUR) + "$"),
                 ],
                 CHECK_INPUT_URL: [ 
