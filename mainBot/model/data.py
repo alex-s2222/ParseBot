@@ -39,7 +39,7 @@ class DB:
         collection = get_database()
 
         collection.update_one(
-            {'_id': 1}, {'$pull': {'urls': {'user_url': insert_user_url}}})
+            {'_id': 1}, {'$pull': {'urls': {'titlel': insert_user_url}}})
 
 
     def update_last_output_hrefs(user_id: int, user_url: str, last_url: str) -> None:
@@ -58,7 +58,7 @@ class DB:
 
     #not test and database
     def set_title_url(user_id: int, user_url:str, title:str) -> None:
-        """краткое название url """
+        """вставаить краткое описание url -> title"""
         collection = get_database()
         collection.update_one({'_id': user_id,'urls':{'$elemMatch':{'user_url':user_url}}},{'$set':{'urls.$.title':title}})
 
@@ -70,7 +70,13 @@ class DB:
         return user_data['urls'][0]['title']
 
     def get_urls(user_id: int) -> dict:
+        """получаем словарь всех url пользователя """
         collection = get_database()
         user_data = collection.find_one({'_id':user_id})
         return user_data['urls']
+    
+    def delete_url_by_title(user_id: int, title: int):
+        """удаляем выпранный url по выбранному title """
+        collection = get_database()
+        collection.update_one({'_id': user_id}, {'$pull': {'urls': {'title': title}}})
     

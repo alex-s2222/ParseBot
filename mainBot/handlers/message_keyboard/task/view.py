@@ -27,7 +27,10 @@ main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, one_time_keyboard=True, resize
 
 #TODO нужно сделать проверку на уникальность вводимых title 
 def create_title_button(titles: list) -> List[InlineKeyboardButton] :
-    titles_keyboard = [ ]
+    """создаем кнопки из title"""
+    titles_keyboard = []
+
     for i , title in enumerate(titles):
             titles_keyboard.append([InlineKeyboardButton(title, callback_data=str(i))])
+
     return titles_keyboard
