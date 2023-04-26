@@ -91,8 +91,6 @@ async def __check_insert_url(update:Update, context: ContextTypes.DEFAULT_TYPE):
     return CHECK_INPUT_URL
 
 
-async def edit_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
 
 # переименовать функцию и придумать отдельный метод для вывода кнопок
 async def __delete_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -115,19 +113,17 @@ async def __delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     # получаем данные
     title_id = int(query.data)
-    print(title_id)
     user_id = query.from_user.id
     
     urls = DB.get_urls(user_id=user_id)
     title = urls[title_id]['title']
-    print(title)
 
     DB.delete_url_by_title(user_id=user_id, title=title)
 
     await query.message.edit_text(f'задача удаленна')
 
 
-#TODO придумать как убрать последнюю ссылку  (не особо важное )
+#TODO придумать как убрать последнюю ссылку  (не особо важное для красоты)
 async def __information_about_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """выводит  url и title пользователя"""
     id = update.callback_query.from_user.id
@@ -136,7 +132,9 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     
     #получаем массив urls 
     urls = DB.get_urls(user_id=id)
-    
+
+    #TODO сделать проверку на пусстой массив url
+
     # формируем сообщение
     output_message = ''
     for url in urls:
@@ -146,16 +144,16 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
 
 
 def tasks() -> ConversationHandler:
-    ONE, TWO, THREE, FOUR = range(4)
+    ONE, TWO, THREE= range(3)
 
     task_handler = ConversationHandler(
             entry_points=[MessageHandler(filters.Regex("^🗃Задачи$"),__tasks)],
             states={
                 START_ROUTES: [
                     CallbackQueryHandler(__create_task, pattern="^" + str(ONE) + "$"),
-                    CallbackQueryHandler(edit_task, pattern="^" + str(TWO) + "$"),
-                    CallbackQueryHandler(__delete_menu, pattern="^" + str(THREE) + "$"),
-                    CallbackQueryHandler(__information_about_task, pattern="^" + str(FOUR) + "$"),
+                    # CallbackQueryHandler(__edit_menu, pattern="^" + str(TWO) + "$"),
+                    CallbackQueryHandler(__delete_menu, pattern="^" + str(TWO) + "$"),
+                    CallbackQueryHandler(__information_about_task, pattern="^" + str(THREE) + "$"),
                 ],
                 CHECK_INPUT_URL: [ 
                     CallbackQueryHandler(__back_task, pattern="^" + str(ONE) + "$"),
