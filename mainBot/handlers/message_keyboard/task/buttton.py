@@ -16,7 +16,7 @@ from telegram import (
 from model.data import DB
 from . import view
 
-START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE = range(4)
+START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE, BACK = range(5)
 
 
 #TODO спросить нельзя ои в отдельный класс для реализации или разбить весь файл на маленькие подмодули
@@ -100,11 +100,17 @@ async def __delete_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     urls = DB.get_urls(user_id=id)
+
+    # проверка есть ли активные задачи
+    if not urls:
+        reply_markup = InlineKeyboardMarkup(view.back_button)
+        await query.edit_message_text(text="активных задач нет", reply_markup=reply_markup) 
+        return BACK
+
     titles = [url['title'] for url in urls]
     reply_markup = InlineKeyboardMarkup(view.create_title_button(titles=titles))
 
     await query.edit_message_text(f"выберите задачу", reply_markup=reply_markup)
-
     return DELETE
 
 async def __delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -133,7 +139,11 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     #получаем массив urls 
     urls = DB.get_urls(user_id=id)
 
-    #TODO сделать проверку на пусстой массив url
+    # проверка есть ли активные задачи
+    if not urls:
+        reply_markup = InlineKeyboardMarkup(view.back_button)
+        await query.edit_message_text(text="активных задач нет", reply_markup=reply_markup) 
+        return BACK
 
     # формируем сообщение
     output_message = ''
@@ -165,6 +175,9 @@ def tasks() -> ConversationHandler:
                 ],
                 DELETE: [
                     CallbackQueryHandler(__delete),
+                ],
+                BACK: [
+                    CallbackQueryHandler(__back_task, pattern="^" + str(ONE) + "$"),
                 ]
                 
             },
