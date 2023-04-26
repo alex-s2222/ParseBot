@@ -30,9 +30,11 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """выводит информацию о аккаунте"""
     user_id = update.message.from_user.id
 
-    #TODO придумать реализацию (время подписки) && (кол-во активных задач ...придумать логику реализацию)
+    active_urls = len(DB.get_urls(user_id=user_id))
+
+    #TODO придумать реализацию (время подписки)
     answer_message = f"Ваш ID {user_id}\n"+\
                         "Подписка доступно до ...\n" +\
-                         "Количестнов активных задач ..."
+                         f"Количестнов активных задач {active_urls}"
     
     await update.message.reply_text(answer_message)
