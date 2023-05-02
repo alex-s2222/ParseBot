@@ -101,7 +101,7 @@ async def __delete_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     urls = DB.get_urls(user_id=id)
 
-    # проверка есть ли активные задачи
+    # проверка есть ли активные задачи у пользователя
     if not urls:
         reply_markup = InlineKeyboardMarkup(view.back_button)
         await query.edit_message_text(text="активных задач нет", reply_markup=reply_markup) 
@@ -139,7 +139,7 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     #получаем массив urls 
     urls = DB.get_urls(user_id=id)
 
-    # проверка есть ли активные задачи
+    # проверка есть ли активные задачи у пользователя 
     if not urls:
         reply_markup = InlineKeyboardMarkup(view.back_button)
         await query.edit_message_text(text="активных задач нет", reply_markup=reply_markup) 
