@@ -14,7 +14,7 @@ from telegram import (
 
 from . import view
 
-START_ROUTES = range(1)
+INPUT = range(1)
 
 
 async def __send_time_subs(update: Update, context:ContextTypes.DEFAULT_TYPE):
@@ -22,10 +22,17 @@ async def __send_time_subs(update: Update, context:ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(view.time_subs_keyboard)
     
     await update.message.reply_text("Выберите время продления", reply_markup=reply_markup)
+    return INPUT
 
 
 async def __send_qiwi_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
+    query = update.callback_query
+    await query.answer()
+    
+    time_url = query.data
+
+    await query.message.edit_text(text=f'{time_url}')
+
 
 
 def subscription():
@@ -34,7 +41,7 @@ def subscription():
     subscription_handler = ConversationHandler(
         entry_points=[MessageHandler(filters.Regex("^💳 Продлить подписку$"), __send_time_subs)],
         states={
-            START_ROUTES:[
+            INPUT:[
                 CallbackQueryHandler(__send_qiwi_url),
             ],
         },
