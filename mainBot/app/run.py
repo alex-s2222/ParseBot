@@ -8,6 +8,8 @@ from telegram.ext import (
 from SETTINGS import TOKEN
 from handlers.main_keyboard import main
 from handlers.message_keyboard.task.buttton import tasks
+from handlers.message_keyboard.subscription.button import subscription
+
 
 
 def run():
@@ -17,10 +19,12 @@ def run():
     app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$'),main.account))
     app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), None))
     #Перенести в message??
-    app.add_handler(MessageHandler(filters.Regex("^💳 Продлить подписку$"), None))
+    # app.add_handler(MessageHandler(filters.Regex("^💳 Продлить подписку$"), None))
     
     # button for tasks
     app.add_handler(tasks())
+    # button for subs 
+    app.add_handler(subscription())
 
 
 
