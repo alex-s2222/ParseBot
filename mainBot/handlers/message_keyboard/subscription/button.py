@@ -12,7 +12,7 @@ from telegram import (
     ReplyKeyboardMarkup
 )
 
-from . import view
+from .. import view
 
 INPUT = range(1)
 
@@ -20,18 +20,25 @@ INPUT = range(1)
 async def __send_time_subs(update: Update, context:ContextTypes.DEFAULT_TYPE):
     """выводим кнопки с временем для для продления подписки """
     reply_markup = InlineKeyboardMarkup(view.time_subs_keyboard)
-    
+    await update.message.reply_markdown_v2(text='Переход в Подписки', reply_markup=view.back_menu)
     await update.message.reply_text("Выберите время продления", reply_markup=reply_markup)
     return INPUT
 
 
 async def __send_qiwi_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    #TODO нет риализации
     query = update.callback_query
     await query.answer()
     
     time_url = query.data
 
     await query.message.edit_text(text=f'{time_url}')
+
+    
+async def __back_to_main_menu(update: Update, context:ContextTypes.DEFAULT_TYPE):
+    """выводим клавиатуру меню и завершаем диалог"""
+    await update.message.reply_text(text='Переход в главное меню', reply_markup=view.main_keyboard)
+    return ConversationHandler.END
 
 
 
@@ -45,7 +52,7 @@ def subscription():
                 CallbackQueryHandler(__send_qiwi_url),
             ],
         },
-        fallbacks=[MessageHandler(filters.Regex("^💳 Продлить подписку$"), __send_time_subs)],
+        fallbacks=[MessageHandler(filters.Regex("^⬅️ Назад в главное меню$"),__back_to_main_menu)],
     )
 
     return subscription_handler

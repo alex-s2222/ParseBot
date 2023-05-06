@@ -10,22 +10,24 @@ from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup, 
     Update,
-    ReplyKeyboardMarkup
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    KeyboardButton
 )
 
 from model.data import DB
-from . import view
+from .. import view
 
 START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE, BACK = range(5)
 
 
-#TODO спросить нельзя ои в отдельный класс для реализации или разбить весь файл на маленькие подмодули
+#TODO спросить нельзя ли в отдельный класс для реализации или разбить весь файл на маленькие подмодули
 async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
-    reply_markup = InlineKeyboardMarkup(view.task_keyboard)
-
-    await update.message.reply_text("Выберете пункт меню", reply_markup=reply_markup)
-
+    markup = InlineKeyboardMarkup(view.task_keyboard)
+    await update.message.reply_markdown_v2(text='Переход в Задачи',reply_markup=view.back_menu)
+    await update.message.reply_text("Выберете пункт меню", reply_markup=markup)
+    
     return START_ROUTES
 
 
@@ -113,6 +115,7 @@ async def __delete_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.edit_message_text(f"выберите задачу", reply_markup=reply_markup)
     return DELETE
 
+
 async def __delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
     #получаем данные с нажатой кнопки и удаляем задачу 
     query = update.callback_query
@@ -153,6 +156,12 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     await query.message.reply_text(f"{output_message}") 
 
 
+async def __back_to_main_menu(update: Update, context:ContextTypes.DEFAULT_TYPE):
+    """выводим клавиатуру меню и завершаем диалог"""
+    await update.message.reply_text(text='Переход в главное меню', reply_markup=view.main_keyboard)
+    return ConversationHandler.END
+
+
 def tasks() -> ConversationHandler:
     ONE, TWO, THREE= range(3)
 
@@ -181,7 +190,8 @@ def tasks() -> ConversationHandler:
                 ]
                 
             },
-            fallbacks=[MessageHandler(filters.Regex("^🗃Задачи$"),__tasks)],
+            fallbacks=[MessageHandler(filters.Regex("^⬅️ Назад в главное меню$"),__back_to_main_menu),
+                       ],
         )
     return task_handler
 

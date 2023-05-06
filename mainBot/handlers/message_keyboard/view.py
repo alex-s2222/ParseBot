@@ -22,8 +22,15 @@ back_button = [
         ],
 ]
 
-main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, one_time_keyboard=True, resize_keyboard=True)
+time_subs_keyboard = [
+    [InlineKeyboardButton('1 день', callback_data=str(__stage[0]))],
+    [InlineKeyboardButton('1 неделя', callback_data=str(__stage[1]))],
+    [InlineKeyboardButton('1 месяц', callback_data=str(__stage[2]))],
+]
 
+main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, resize_keyboard=True)
+
+back_menu = ReplyKeyboardMarkup([['⬅️ Назад в главное меню']], resize_keyboard=True, one_time_keyboard=True)
 
 #TODO нужно сделать проверку на уникальность вводимых title 
 def create_title_button(titles: list) -> List[InlineKeyboardButton] :

@@ -3,6 +3,9 @@ from model.create import get_database
 
 
 class DB:
+
+
+
     def insert_default_user(user_id: int) -> None:
         """Вставка дефолтного пользователя в базу данных """
         collection = get_database()

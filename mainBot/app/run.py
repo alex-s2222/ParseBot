@@ -15,12 +15,14 @@ from handlers.message_keyboard.subscription.button import subscription
 def run():
     app = Application.builder().token(TOKEN).build()
 
+    # app.persistence
     app.add_handler(CommandHandler("start", main.start))
     app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$'),main.account))
-    app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), None))
-    
+    app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), ...))
+
     # button for tasks
     app.add_handler(tasks())
+
     # button for subs 
     app.add_handler(subscription())
 
