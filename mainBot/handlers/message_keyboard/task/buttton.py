@@ -21,9 +21,8 @@ from .. import view
 START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE, BACK = range(5)
 
 
-#TODO спросить нельзя ли в отдельный класс для реализации или разбить весь файл на маленькие подмодули
 async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    
+    """переход в разговор Задачи"""
     markup = InlineKeyboardMarkup(view.task_keyboard)
     await update.message.reply_markdown_v2(text='Переход в Задачи',reply_markup=view.back_menu)
     await update.message.reply_text("Выберете пункт меню", reply_markup=markup)
@@ -31,7 +30,6 @@ async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 
-#TODO rewrite output message delete input url 
 async def __create_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """просим пользователя ввести ссылку, выводим кноаку назад """
     query = update.callback_query
@@ -93,8 +91,6 @@ async def __check_insert_url(update:Update, context: ContextTypes.DEFAULT_TYPE):
     return CHECK_INPUT_URL
 
 
-
-# переименовать функцию и придумать отдельный метод для вывода кнопок
 async def __delete_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     id = update.callback_query.from_user.id
     query = update.callback_query
@@ -124,17 +120,22 @@ async def __delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
     title_id = int(query.data)
     user_id = query.from_user.id
     
+    # обрабатываем данные
     urls = DB.get_urls(user_id=user_id)
     title = urls[title_id]['title']
 
+    #удаляем задачу из баззы данных 
     DB.delete_url_by_title(user_id=user_id, title=title)
 
-    await query.message.edit_text(f'задача удаленна')
+    # создаем кнопку назад к задачам 
+    reply_markup = InlineKeyboardMarkup(view.back_button)
+
+    await query.message.edit_text(f'задача удаленна',reply_markup=reply_markup)
+    return BACK
 
 
-#TODO придумать как убрать последнюю ссылку  (не особо важное для красоты)
 async def __information_about_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """выводит  url и title пользователя"""
+    """выводит задачи и их назавние пользователю"""
     id = update.callback_query.from_user.id
     query = update.callback_query
     await query.answer()
@@ -144,8 +145,8 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
 
     # проверка есть ли активные задачи у пользователя 
     if not urls:
-        reply_markup = InlineKeyboardMarkup(view.back_button)
-        await query.edit_message_text(text="активных задач нет", reply_markup=reply_markup) 
+        back_button = InlineKeyboardMarkup(view.back_button)
+        await query.edit_message_text(text="активных задач нет", reply_markup=back_button) 
         return BACK
 
     # формируем сообщение
@@ -153,7 +154,11 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
     for url in urls:
         output_message += '\t________' + url['title'] + '________\n' + url['user_url'] + '\n\n'
 
-    await query.message.reply_text(f"{output_message}") 
+    back_button = InlineKeyboardMarkup(view.back_button)
+
+    await query.message.edit_text(f"{output_message}", reply_markup=back_button) 
+    
+    return BACK
 
 
 async def __back_to_main_menu(update: Update, context:ContextTypes.DEFAULT_TYPE):
