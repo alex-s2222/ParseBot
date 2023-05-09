@@ -30,6 +30,7 @@ async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 
+#TODO сделать проверку на подписку 
 async def __create_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """просим пользователя ввести ссылку, выводим кноаку назад """
     query = update.callback_query
