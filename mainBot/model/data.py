@@ -43,7 +43,7 @@ class DB:
 
 
     def update_last_output_hrefs(user_id: int, user_url: str, last_url: str) -> None:
-        """добавление новой ссылки в отправленные сслылки юзера (что бы не повторялись)"""
+        """добавление новой ссылки в отправленные сслылки юзера (что бы не повторялись отправленые ссылки)"""
         collection = get_database()
 
         collection.update_one({'_id': user_id, 'urls.user_url': user_url}, {'$push': {"urls.$.last_output_hrefs":
@@ -54,7 +54,7 @@ class DB:
         collection = get_database()
         
         user = collection.find_one({'_id': user_id})
-        return user 
+        return user         
 
     #not test and database
     def set_title_url(user_id: int, user_url:str, title:str) -> None:
