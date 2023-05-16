@@ -1,4 +1,5 @@
 from .create import get_database
+from typing import List
 
 
 class DB:
@@ -25,16 +26,16 @@ class DB:
         user_data = collection.find_one({'_id':user_id})
         return user_data['urls']
     
-
-    def get_user_urls(user_id :int) -> list:
+    #TODO возможно передввать словарь title url 
+    def get_user_urls_and_title(user_id :int) -> List:
         """возвращаем список url пользователя"""
-        print(user_id)
         collection = get_database()
         user_data = collection.find_one({'_id':user_id})
         urls = []
         for url_data in user_data['urls']:
             url = url_data['user_url']
-            urls.append(url)
+            title = url_data['title']
+            urls.append({title: url})
         return urls
 
 
@@ -50,7 +51,5 @@ if __name__ == '__main__':
     # for i in range(3):
     #     urls = 'https://www.avito.ru'
     #     DB.update_last_output_hrefs(user_id=user_id,user_url=user_url, last_url=urls)
-    urls = 'op'
-    DB.update_last_output_hrefs(user_id=user_id,user_url=user_url, last_url=urls)
-    output = DB.get_user_output_href(user_id=user_id, user_url=user_url)
+    output = DB.get_user_urls_and_title(user_id=user_id)
     print(output)

@@ -6,7 +6,7 @@ from telegram import (
     Update,
 )
 
-from parseUrl.Advertisement import get_message
+from parseUrl.Parse import parseUrl
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -32,14 +32,19 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
     job = context.job
 
     # запускаем парсер
-    for url_data in get_message(user_id=job.chat_id):
-        if url_data:
-            out_message = f'{url_data["output_user_url"]} \n' +\
-                            f'{url_data["name"]} \n' +\
-                            f'{url_data["price"]}'
-            await context.bot.send_message(job.chat_id, text=out_message)
-        else:
-            continue
+    data_urls = await parseUrl().get_message(user_id=job.chat_id)
+    from pprint import pprint
+    pprint(data_urls)
+    for data_url in data_urls:
+        for title, url in data_url.items():
+            if url:
+                msq = f'\t#{title} \n'  +\
+                        f'{url["output_user_url"]} \n' +\
+                        f'{url["name"]} \n' +\
+                        f'{url["price"]} \n'
+                await context.bot.send_message(job.chat_id, text=msq)
+            else:
+                continue
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
