@@ -31,7 +31,6 @@ class parseUrl:
         #                 f'{url["price"]} \n'
         #     print(msq)
 
-
     async def __get_data_url(self, url :str, title :str, user_id :int) -> Dict:
         sslcontext = ssl.create_default_context()
         sslcontext.options |= ssl.OP_NO_SSLv3
