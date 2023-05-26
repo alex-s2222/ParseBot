@@ -2,6 +2,7 @@ from .create import get_database
 
 
 class DB:
+    
     def update_last_output_hrefs(user_id: int, user_url: str, last_url: str) -> None:
         """добавление новой ссылки в отправленные сслылки юзера (что бы не повторялись)"""
         collection = get_database()
@@ -36,6 +37,7 @@ class DB:
             url = url_data['user_url']
             urls.append(url)
         return urls
+<<<<<<< HEAD
 
 
 if __name__ == '__main__':
@@ -54,3 +56,5 @@ if __name__ == '__main__':
     DB.update_last_output_hrefs(user_id=user_id,user_url=user_url, last_url=urls)
     output = DB.get_user_output_href(user_id=user_id, user_url=user_url)
     print(output)
+=======
+>>>>>>> b6cb929 (optimiz)
