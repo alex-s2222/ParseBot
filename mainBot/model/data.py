@@ -33,7 +33,9 @@ class DB:
     
     #TODO right func check user 
     def check_user_from_db(user_id :int):
-        pass
+        collection = get_database()
+        user = collection.find_one({'_id':user_id})
+        return user
 
     #TODO right func check length user urls then < 5
     def check_count_user_url(user_id :int):

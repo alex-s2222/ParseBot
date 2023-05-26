@@ -22,14 +22,6 @@ class parseUrl:
         data_urls = await asyncio.gather(*tasks)
 
         return data_urls
-        # обрабатываем полученые 
-        # for data_url in data_urls:
-        #     for title, url in data_url.items():
-        #         msq = f'\t#{title} \n'  +\
-        #                 f'{url["output_user_url"]} \n' +\
-        #                 f'{url["name"]} \n' +\
-        #                 f'{url["price"]} \n'
-        #     print(msq)
 
 
     async def __get_data_url(self, url :str, title :str, user_id :int) -> Dict:
@@ -96,16 +88,3 @@ class parseUrl:
             price = int(tag_name['content'])
             # print("price:\t", price)
             return price
-
-
-from datetime import datetime
-
-
-if __name__ == "__main__":
-    start = datetime.now()
-    asyncio.run(parseUrl().main())
-    end = datetime.now() - start
-    print(end)
-
-    a = parseUrl()
-    

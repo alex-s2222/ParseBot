@@ -17,8 +17,11 @@ markup = ReplyKeyboardMarkup(MENUKEYBOARD, one_time_keyboard=True, resize_keyboa
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/start message from user and output keyboard"""
     #TODO Delete this, for testing or no 
-    # id = update.message.from_user.id
-    # DB.insert_default_user(user_id=id)
+    user_id = update.message.from_user.id
+
+    # проверка что пользователя нет в базе данных
+    if not DB.check_user_from_db(user_id=user_id):
+        DB.insert_default_user(user_id=user_id)
 
     await update.message.reply_text(
         'Добро пожаловать в \n <<MyParseAvito>>',
