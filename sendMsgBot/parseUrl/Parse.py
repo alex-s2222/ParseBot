@@ -2,7 +2,6 @@ import ssl
 import aiohttp
 import asyncio 
 from bs4 import BeautifulSoup
-from pprint import pprint 
 from SETTINGS import FORCED_CIPHERS
 from typing import List, Dict
 from model.data import DB
@@ -68,13 +67,13 @@ class parseUrl:
                                 'price': price}
                 
                 DB.update_last_output_hrefs(user_id=user_id, user_url=user_url, last_url=href)
-            return new_data_url
+                return new_data_url
 
 
     def __get_name_href(self, tag) -> str:
         HREF_AVITO = "https://www.avito.ru"
 
-        for tag_div_a in tag.findAll(attrs={'class': 'iva-item-titleStep-pdebR'}):
+        for tag_div_a in tag.findAll(attrs={'class': 'iva-item-title-py3i_'}):
             for tag_a in tag_div_a:
                 href = HREF_AVITO + tag_a.attrs.get("href")
                 # print("URL:\t", href)
