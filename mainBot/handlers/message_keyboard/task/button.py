@@ -85,10 +85,13 @@ async def __input_title_from_user(update: Update, context: ContextTypes.DEFAULT_
     user_id = update.message.from_user.id
     title = update.message.text
     user_data = context.user_data
+    
+    # проверяем уникальность вводимого описания пользователем
+    if DB.check_user_titles(user_id=user_id, user_title=title):
+        await update.message.reply_text(f'Задача с таким описанием уже существует, придумайте уникальное описание')
+        return INPUT_TITLE_FROM_URL
 
-    DB.insert_user_url_in_arr(
-        user_id=user_id, insert_user_url=user_data['url'])
-    DB.set_title_url(user_id=user_id, user_url=user_data['url'], title=title)
+    DB.insert_user_url_and_title(user_id=user_id, user_url=user_data['url'], user_title=title)
 
     user_data.clear()
 
@@ -100,7 +103,6 @@ async def __input_title_from_user(update: Update, context: ContextTypes.DEFAULT_
 
 async def __check_insert_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """пользователь ввел неправильную ссылку на avito"""
-
     reply_markup = InlineKeyboardMarkup(view.back_button)
     await update.message.reply_text(f"Ошибка, введите корректную ссылку на авито", reply_markup=reply_markup)
 
@@ -188,6 +190,10 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
 async def __back_to_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """выводим клавиатуру меню и завершаем диалог"""
     user_id = update.message.from_user.id
+
+    # очищаем данные пользователя на всякий случай
+    context.user_data.clear()
+
     await update.message.reply_text(text='Переход в главное меню', reply_markup=view.main_keyboard)
 
     logger.log('USER', f'User {user_id} back to main menu')
@@ -214,8 +220,7 @@ def tasks() -> ConversationHandler:
                     __back_task, pattern="^" + str(ONE) + "$"),
                     
                 #TODO |^(https://m.avito.ru) 
-                MessageHandler(filters.Regex(
-                    "^(https://www.avito.ru/)"), __insert_url),
+                MessageHandler(filters.Regex("^(https://www.avito.ru/)"), __insert_url),
                 MessageHandler(filters.TEXT, __check_insert_url)
             ],
             INPUT_TITLE_FROM_URL: [
