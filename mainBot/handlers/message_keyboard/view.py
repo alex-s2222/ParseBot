@@ -32,7 +32,7 @@ main_keyboard = ReplyKeyboardMarkup(MENUKEYBOARD, resize_keyboard=True)
 
 back_menu = ReplyKeyboardMarkup([['⬅️ Назад в главное меню']], resize_keyboard=True, one_time_keyboard=True)
 
-#TODO нужно сделать проверку на уникальность вводимых title 
+
 def create_title_button(titles: list) -> List[InlineKeyboardButton] :
     """создаем кнопки из title"""
     titles_keyboard = []
