@@ -27,14 +27,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
-
     """Send the alarm message."""
     job = context.job
 
     # запускаем парсер
     data_urls = await parseUrl().get_message(user_id=job.chat_id)
+
+    # delete
     from pprint import pprint
     pprint(data_urls)
+
+
     for data_url in data_urls:
         for title, url in data_url.items():
             if url:
