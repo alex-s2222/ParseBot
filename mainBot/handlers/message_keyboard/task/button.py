@@ -92,10 +92,9 @@ async def __input_title_from_user(update: Update, context: ContextTypes.DEFAULT_
         return INPUT_TITLE_FROM_URL
 
     DB.insert_user_url_and_title(user_id=user_id, user_url=user_data['url'], user_title=title)
+    logger.log('USER', f'User {user_id} insert url and title in DB Url: {user_data["url"]}')
 
     user_data.clear()
-
-    logger.log('USER', f'User {user_id} insert url and title in DB')
 
     await update.message.reply_text(f"ссылка и описание внесенны", reply_markup=view.main_keyboard)
     return ConversationHandler.END

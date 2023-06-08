@@ -7,7 +7,7 @@ from telegram.ext import (
 
 from SETTINGS import TOKEN
 from handlers.main_keyboard import main
-from handlers.message_keyboard.task.buttton import tasks
+from handlers.message_keyboard.task.button import tasks
 from handlers.message_keyboard.subscription.button import subscription
 
 from warnings import filterwarnings
