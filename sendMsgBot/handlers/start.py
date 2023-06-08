@@ -5,6 +5,7 @@ from telegram.ext import (
 from telegram import (
     Update,
 )
+from telegram.constants import ParseMode
 
 from parseUrl.Parse import parseUrl
 
@@ -41,11 +42,11 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
     for data_url in data_urls:
         for title, url in data_url.items():
             if url:
-                msq = f'\t#{title} \n'  +\
-                        f'{url["output_user_url"]} \n' +\
-                        f'{url["name"]} \n' +\
-                        f'{url["price"]} \n'
-                await context.bot.send_message(job.chat_id, text=msq)
+                msq = f'#{title.replace(" ", "_")} \n'  +\
+                        f'👉Название: \t{url["name"]} \n\n' +\
+                        f'💸Цена: \t{url["price"]} \n\n' +\
+                        f'✅Ссылка: \t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
+                await context.bot.send_message(job.chat_id, text=msq, parse_mode=ParseMode.HTML)
             else:
                 continue
 
