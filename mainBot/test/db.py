@@ -50,14 +50,14 @@ class TestDB:
     def test_check_count_user_urls(self, conn):
         """проверяем кол-во задач пользователя"""
         check_count_url = DB.check_count_user_url(user_id=TestUser.user_id)
-        assert check_count_url == True
+        assert check_count_url == False
 
         # заполняем до 5 задач
         for i in range(4):
             DB.insert_user_url_and_title(TestUser.user_id, TestUser.insert_urls[i+1], TestUser.insert_titles[i+1])
 
         check_count_url = DB.check_count_user_url(user_id=TestUser.user_id)
-        assert check_count_url == False
+        assert check_count_url == True
 
     
     def test_check_user_titles(self):

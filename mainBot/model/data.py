@@ -49,9 +49,9 @@ class DB:
 
         logger.info(f' {user_id} have {count_urls} in DB')
 
-        if count_urls < 5:
+        if count_urls >= 5:
             return True
-        elif count_urls >= 5:
+        elif count_urls < 5:
             return False
 
     # not log

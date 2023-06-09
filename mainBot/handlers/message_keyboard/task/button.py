@@ -38,7 +38,14 @@ async def __create_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     user_id = query.from_user.id
 
+    # создаем кнопку назад
     reply_markup = InlineKeyboardMarkup(view.back_button)
+
+    #TODO проверка на то что у тебя пользователя меньше 5 поисков
+    if DB.check_count_user_url(user_id=user_id):
+        await query.edit_message_text(text="Максимальное число задач - 5, что бы добавить\nновую задачу удалите уже существующую", reply_markup=reply_markup)
+        return BACK
+        
 
     await query.edit_message_text(
         text="Введите ссылку на avito", reply_markup=reply_markup
