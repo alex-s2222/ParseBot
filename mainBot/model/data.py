@@ -29,10 +29,6 @@ class DB:
         new_user_insert_url = {
             'user_url': user_url,
             'title': user_title,
-            'name': '',
-            'output_user_ulr': '',
-            'description': '',
-            'price': 0,
             'last_output_hrefs': []
         }
 
