@@ -16,14 +16,22 @@ from loguru import logger
 from model.data import DB
 from .. import view
 
-START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE, BACK = range(5)
+START_ROUTES, CHECK_INPUT_URL, INPUT_TITLE_FROM_URL, DELETE, BACK, NOT_SUBS = range(6)
 
 
 async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """переход в разговор Задачи"""
     user_id = update.message.from_user.id
     markup = InlineKeyboardMarkup(view.task_keyboard)
-    await update.message.reply_markdown_v2(text='Переход в Задачи', reply_markup=view.back_menu)
+
+    # проверка на то что у пользователя есть подписка
+    if DB.check_user_subscription(user_id=user_id):
+        await update.message.reply_text(text='Оплатите подписку что бы пользоваться ботом\n',
+                                       reply_markup=view.main_keyboard)
+        
+        return ConversationHandler.END
+
+    await update.message.reply_text(text='Переход в Задачи', reply_markup=view.back_menu)
     await update.message.reply_text("Выберете пункт меню", reply_markup=markup)
 
     logger.log("USER", f"User: {user_id} pressed to tasks")
@@ -31,7 +39,7 @@ async def __tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 
-# TODO сделать проверку на подписку
+# сделать проверку на подписку
 async def __create_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """просим пользователя ввести ссылку, выводим кноаку назад """
     query = update.callback_query
@@ -40,15 +48,13 @@ async def __create_task(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # создаем кнопку назад
     reply_markup = InlineKeyboardMarkup(view.back_button)
-
-    #TODO проверка на то что у пользователя есть подписка
-
-    #проверка на то что у тебя пользователя меньше 5 поисков
+    
+    # проверка на то что у тебя пользователя меньше 5 поисков
     if DB.check_count_user_url(user_id=user_id):
-        await query.edit_message_text(text="Максимальное число задач - 5, что бы добавить\nновую задачу удалите уже существующую", reply_markup=reply_markup)
+        await query.edit_message_text(text='Максимальное число задач - 5, что бы добавить\nновую задачу удалите уже существующую',
+                                       reply_markup=reply_markup)
         return BACK
         
-
     await query.edit_message_text(
         text="Введите ссылку на avito", reply_markup=reply_markup
     )
@@ -240,7 +246,7 @@ def tasks() -> ConversationHandler:
             BACK: [
                 CallbackQueryHandler(
                     __back_task, pattern="^" + str(ONE) + "$"),
-            ]
+            ],
 
         },
         fallbacks=[MessageHandler(filters.Regex("^⬅️ Назад в главное меню$"), __back_to_main_menu),

@@ -47,9 +47,9 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     active_urls = len(DB.get_urls(user_id=user_id))
     end_subs = DB.get_user_subsctription(user_id=user_id).date()
 
-    answer_message = f"Ваш ID {user_id}\n"+\
-                        f"Подписка доступно до {end_subs}\n" +\
-                         f"Количестнов активных задач {active_urls}"
+    answer_message = f"Ваш ID: {user_id}\n"+\
+                        f"Подписка доступно до: {end_subs.day}.{end_subs.month}.{end_subs.year}\n" +\
+                         f"Количестнов активных задач: {active_urls}"
     
     logger.log('USER', f'User:{user_id} check info account')
     
