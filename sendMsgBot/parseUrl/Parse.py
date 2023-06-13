@@ -1,9 +1,11 @@
-import ssl
+from bs4 import BeautifulSoup
 import aiohttp
 import asyncio 
-from bs4 import BeautifulSoup
-from SETTINGS import FORCED_CIPHERS
+import ssl
+
 from typing import List, Dict
+
+from SETTINGS import FORCED_CIPHERS
 from model.data import DB
 
 
@@ -37,7 +39,9 @@ class parseUrl:
     def __parse_html(self, content: str, user_id: int, user_url: str) -> Dict:
         soup = BeautifulSoup(content)
 
-        for j, tag_div in enumerate(soup.findAll(attrs={
+        sent_user_link: List = DB.get_user_output_href(user_id=user_id, user_url=user_url)
+
+        for num_ad, tag_div in enumerate(soup.findAll(attrs={
                 'class': 'iva-item-root-_lk9K photo-slider-slider-S15A_ iva-item-list-rfgcH iva-item-redesign-rop6P iva-item-responsive-_lbhG items-item-My3ih items-listItem-Gd1jN js-catalog-item-enum'})):
 
             # search url and name product
@@ -48,15 +52,21 @@ class parseUrl:
 
             # search price product
             price = self.__get_price(tag_div)
-
-            # проверка что новая ссылка не равняется старой
-            if href in DB.get_user_output_href(user_id=user_id, user_url=user_url):
+            
+            location = self.__get_location(tag_div)
+            
+            # проверка что новая ссылка не отправлялась пользователю
+            if num_ad >=5:
                 return ''
+            elif href in sent_user_link:
+                continue
             else:
                 new_data_url = {'output_user_url': href, 
                                 'name': name, 
-                                'price': price}
+                                'price': price,
+                                'location': location}
                 
+                print(new_data_url)
                 DB.update_last_output_hrefs(user_id=user_id, user_url=user_url, last_url=href)
                 return new_data_url
 
@@ -87,3 +97,22 @@ class parseUrl:
             price = int(tag_name['content'])
             # print("price:\t", price)
             return price
+    
+    def __get_location(self, tag) -> str:
+        location = ''
+        distance = ''
+
+        for tag_span in tag.findAll(attrs={'class': 'styles-module-root-_KFFt styles-module-size_s-awPvv styles-module-size_s-_P6ZA styles-module-ellipsis-LKWy3 styles-module-ellipsis_oneLine-NY089 stylesMarningNormal-module-root-OSCNq stylesMarningNormal-module-paragraph-s-_c6vD styles-module-noAccent-nZxz7 styles-module-root_top-HYzCt styles-module-margin-top_0-_usAN'}):
+            location = str(tag_span.text).replace(u'\xa0', u' ')
+            # print('L', location)
+            break
+            
+        for tag_span in tag.findAll(attrs={'class': 'geo-periodSection-bQIE4'}):        
+            distance = str(tag_span.text).replace(u'\xa0', u' ')
+            break
+
+        if distance:
+            location = location.split(distance)[0]
+            return location + ' ' + distance
+        else:
+            return location

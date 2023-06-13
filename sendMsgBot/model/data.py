@@ -1,5 +1,6 @@
 from .create import get_database
 from typing import List
+from datetime import datetime
 
 
 class DB:
@@ -27,7 +28,19 @@ class DB:
         user_data = collection.find_one({'_id':user_id})
         return user_data['urls']
     
-    #TODO возможно передввать словарь title url 
+
+    def check_user_subscription(user_id: int) -> bool:
+        """Если у пользователя есть активная подписка возвращаем False"""
+        collection = get_database()
+        user_data = collection.find_one({'_id':user_id})
+
+        time = datetime.now()
+        if user_data['end_subscripption'] < time:
+            return True
+        else:
+            return False
+
+
     def get_user_urls_and_title(user_id :int) -> List:
         """возвращаем список url пользователя"""
         collection = get_database()

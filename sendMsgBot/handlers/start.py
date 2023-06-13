@@ -34,18 +34,14 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
     # запускаем парсер
     data_urls = await parseUrl().get_message(user_id=job.chat_id)
 
-    # delete
-    from pprint import pprint
-    pprint(data_urls)
-
-
     for data_url in data_urls:
         for title, url in data_url.items():
             if url:
                 msq = f'#{title.replace(" ", "_")} \n'  +\
-                        f'👉Название: \t{url["name"]} \n\n' +\
-                        f'💸Цена: \t{url["price"]} \n\n' +\
-                        f'✅Ссылка: \t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
+                        f'👉\t{url["name"]} \n\n' +\
+                        f'💸\t{url["price"]} руб. \n\n' +\
+                        f'📍\t{url["location"]} \n\n'+\
+                        f'✅\t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
                 await context.bot.send_message(job.chat_id, text=msq, parse_mode=ParseMode.HTML)
             else:
                 continue
