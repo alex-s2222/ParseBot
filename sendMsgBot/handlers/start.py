@@ -39,7 +39,7 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
             if url:
                 msq = f'#{title.replace(" ", "_")} \n'  +\
                         f'👉\t{url["name"]} \n\n' +\
-                        f'💸\t{url["price"]} руб. \n\n' +\
+                        f'💸\t{url["price"]} ₽ \n\n' +\
                         f'📍\t{url["location"]} \n\n'+\
                         f'✅\t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
                 await context.bot.send_message(job.chat_id, text=msq, parse_mode=ParseMode.HTML)

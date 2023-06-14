@@ -4,6 +4,7 @@ import asyncio
 import ssl
 
 from typing import List, Dict
+from loguru import logger
 
 from SETTINGS import FORCED_CIPHERS
 from model.data import DB
@@ -53,6 +54,7 @@ class parseUrl:
             # search price product
             price = self.__get_price(tag_div)
             
+            # search location product 
             location = self.__get_location(tag_div)
             
             # проверка что новая ссылка не отправлялась пользователю
@@ -66,7 +68,8 @@ class parseUrl:
                                 'price': price,
                                 'location': location}
                 
-                print(new_data_url)
+                logger.debug(f'OUT_URL: {new_data_url}')
+
                 DB.update_last_output_hrefs(user_id=user_id, user_url=user_url, last_url=href)
                 return new_data_url
 
@@ -94,9 +97,13 @@ class parseUrl:
 
     def __get_price(self,tag) -> str:
         for tag_name in tag.findAll(attrs={'itemprop': 'price'}):
-            price = int(tag_name['content'])
+            price_from_url = tag_name['content']
+            
+            # вставляем в цену пробел через каждые 3 символа
+            price = [price_from_url[::-1][i:i+3] for i in range(0,len(price_from_url),3)][::-1]
+
             # print("price:\t", price)
-            return price
+            return ' '.join(price)
     
     def __get_location(self, tag) -> str:
         location = ''
