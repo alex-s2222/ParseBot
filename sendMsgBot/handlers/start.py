@@ -8,6 +8,7 @@ from telegram import (
 from telegram.constants import ParseMode
 
 from parseUrl.Parse import parseUrl
+from model.data import DB
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -30,21 +31,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send the alarm message."""
     job = context.job
+    
+    if DB.check_user_subscription(user_id=job.chat_id):
+        # если у пользователя нет подписки
+        remove_job_if_exists(str(job.chat_id), context)
+        text = 'Оплатите подписку в основном боте, что бы продолжить пользоваться ботом'
+        await context.bot.send_message(job.chat_id, text=text)
+    else:
+        # запускаем парсер
+        data_urls = await parseUrl().get_message(user_id=job.chat_id)
 
-    # запускаем парсер
-    data_urls = await parseUrl().get_message(user_id=job.chat_id)
-
-    for data_url in data_urls:
-        for title, url in data_url.items():
-            if url:
-                msq = f'#{title.replace(" ", "_")} \n'  +\
-                        f'👉\t{url["name"]} \n\n' +\
-                        f'💸\t{url["price"]} ₽ \n\n' +\
-                        f'📍\t{url["location"]} \n\n'+\
-                        f'✅\t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
-                await context.bot.send_message(job.chat_id, text=msq, parse_mode=ParseMode.HTML)
-            else:
-                continue
+        for data_url in data_urls:
+            for title, url in data_url.items():
+                if url:
+                    msq = f'#{title.replace(" ", "_")} \n'  +\
+                            f'👉\t{url["name"]} \n\n' +\
+                            f'💸\t{url["price"]} ₽ \n\n' +\
+                            f'📍\t{url["location"]} \n\n'+\
+                            f'✅\t' + f'<a href="{url["output_user_url"]}">Ссылка</a>'
+                    await context.bot.send_message(job.chat_id, text=msq, parse_mode=ParseMode.HTML)
+                else:
+                    continue
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:

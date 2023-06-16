@@ -35,7 +35,7 @@ class DB:
         user_data = collection.find_one({'_id':user_id})
 
         time = datetime.now()
-        if user_data['end_subscripption'] < time:
+        if user_data['end_subscription'] < time:
             return True
         else:
             return False
