@@ -9,11 +9,13 @@ from telegram.constants import ParseMode
 
 from parseUrl.Parse import parseUrl
 from model.data import DB
+from loguru import logger
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """парсит url из бд пользователя""" 
     user_id = update.message.from_user.id
+    logger.debug(f'User: {user_id} press start')
     try:
         # удаляем работу 
         job_removed = remove_job_if_exists(str(user_id), context)
@@ -36,11 +38,16 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
         # если у пользователя нет подписки
         remove_job_if_exists(str(job.chat_id), context)
         text = 'Оплатите подписку в основном боте, что бы продолжить пользоваться ботом'
+
+        logger.debug(f'User:{job.chat_id} END subscription')
+
         await context.bot.send_message(job.chat_id, text=text)
     else:
         # запускаем парсер
         data_urls = await parseUrl().get_message(user_id=job.chat_id)
-
+        
+        logger.debug(f'{job.chat_id} DATA {data_urls}')
+        
         for data_url in data_urls:
             for title, url in data_url.items():
                 if url:
