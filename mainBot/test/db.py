@@ -10,9 +10,12 @@ from model.create import get_database
 @dataclass
 class User:
     _id = 1
-    _urls = ['avito.ru', '1avito.ru',
-                   '2avito.ru', '3avito.ru', '4avito.ru']
-    _titles = ['0', '1', '2', '3', '4']
+    _urls = ['https://www.avito.ru/sankt-peterburg/audio_i_video/naushniki-ASgBAgICAUSIAtRO?cd=1&f=ASgBAQECAUSIAtROAUDqvA0U_NE0AUXGmgwUeyJmcm9tIjowLCJ0byI6NDAwMH0&q=airpods&s=104&user=1',
+              'https://www.avito.ru/sankt-peterburg/kvartiry/prodam/vtorichka-ASgBAgICAkSSA8YQ5geMUg?context=H4sIAAAAAAAA_0q0MrSqLraysFJKK8rPDUhMT1WyLrYyNLNSKk5NLErOcMsvyg3PTElPLVGyrgUEAAD__xf8iH4tAAAA&f=ASgBAQECAkSSA8YQ5geMUgFAygg0hFmCWYBZAUXGmgwYeyJmcm9tIjowLCJ0byI6MTcwMDAwMDB9&s=104',
+                   'https://www.avito.ru/sankt-peterburg/muzykalnye_instrumenty/pianino_i_klavishnye-ASgBAgICAUTEAswK?cd=1&f=ASgBAQECAUTEAswKAUCEvQ0UsNI0AUXGmgwUeyJmcm9tIjowLCJ0byI6MTAwMH0&q=синтезатор&s=104&user=1',
+                     'https://www.avito.ru/sankt-peterburg/posuda_i_tovary_dlya_kuhni?cd=1&q=бокалы&s=104',
+                       'https://www.avito.ru/sankt-peterburg/mebel_i_interer/shkafy_komodyi_stellazhi/shkafy-ASgBAgICAkRaqAK2xg2~4D0?cd=1&q=шкаф&s=104']
+    _titles = ['airpods', 'house', 'piano', 'hrust', 'shkaf']
 
 
 @pytest.fixture
@@ -91,6 +94,6 @@ class TestDB:
         assert False == DB.check_user_titles(user_id=User._id, user_title=dont_title)
 
     """<-----------end----------->"""
-    def test_delete_user(self, conn):
-        """удаляем тестового пользователя в базе данных"""
-        conn.delete_one({'_id': User._id})
+    # def test_delete_user(self, conn):
+    #     """удаляем тестового пользователя в базе данных"""
+    #     conn.delete_one({'_id': User._id})
