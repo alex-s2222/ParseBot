@@ -23,8 +23,8 @@ def run():
     
     # app.persistence
     app.add_handler(CommandHandler("start", main.start))
-    app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$'),main.account))
-    app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), ...))
+    app.add_handler(MessageHandler(filters.Regex('^😎Аккаунт$'), main.account))
+    app.add_handler(MessageHandler(filters.Regex("^📱Поддержка$"), main.support))
 
     # button for tasks
     app.add_handler(tasks())
