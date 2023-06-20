@@ -67,8 +67,6 @@ class parseUrl:
                                 'name': name, 
                                 'price': price,
                                 'location': location}
-                
-                logger.debug(f'OUT_URL: {new_data_url}')
 
                 DB.update_last_output_hrefs(user_id=user_id, user_url=user_url, last_url=href)
                 return new_data_url
