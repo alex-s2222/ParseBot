@@ -11,7 +11,6 @@ __stage = [i for i in range(3)]
 
 task_keyboard = [
         [InlineKeyboardButton('Создать задачу', callback_data=str(__stage[0]))],
-        # [InlineKeyboardButton('Редактировать', callback_data=str(__stage[1]))],
         [InlineKeyboardButton('Удалить задачу',callback_data=str(__stage[1]))],
         [InlineKeyboardButton('Информация о задачах', callback_data=str(__stage[2]))],
     ]

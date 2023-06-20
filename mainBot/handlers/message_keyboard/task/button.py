@@ -179,10 +179,10 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
 
     # получаем массив urls
     urls = DB.get_urls(user_id=user_id)
+    back_button = InlineKeyboardMarkup(view.back_button)
 
     # проверка есть ли активные задачи у пользователя
     if not urls:
-        back_button = InlineKeyboardMarkup(view.back_button)
         await query.edit_message_text(text="активных задач нет", reply_markup=back_button)
         return BACK
 
@@ -192,7 +192,7 @@ async def __information_about_task(update: Update, context: ContextTypes.DEFAULT
         output_message += '\t________' + \
             url['title'] + '________\n' + url['user_url'] + '\n\n'
 
-    back_button = InlineKeyboardMarkup(view.back_button)
+
 
     logger.log('USER', f'User {user_id}  view information about tasks')
 
