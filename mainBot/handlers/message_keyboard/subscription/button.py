@@ -26,13 +26,16 @@ async def __send_time_subs(update: Update, context:ContextTypes.DEFAULT_TYPE):
 
 
 async def __send_qiwi_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    #TODO нет риализации
+    #TODO нет риализации 
     query = update.callback_query
     await query.answer()
     
     time_url = query.data
 
-    await query.message.edit_text(text=f'{time_url}')
+    MY_ACCOUNT = '@Juzorai'
+    out_message = f'Для оплаты и выбора лимита пишите\n👉{MY_ACCOUNT}'
+
+    await query.message.edit_text(text=out_message)
 
     
 async def __back_to_main_menu(update: Update, context:ContextTypes.DEFAULT_TYPE):

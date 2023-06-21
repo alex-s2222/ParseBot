@@ -67,8 +67,6 @@ class parseUrl:
                                 'name': name, 
                                 'price': price,
                                 'location': location}
-                
-                logger.debug(f'OUT_URL: {new_data_url}')
 
                 DB.update_last_output_hrefs(user_id=user_id, user_url=user_url, last_url=href)
                 return new_data_url
@@ -100,7 +98,7 @@ class parseUrl:
             price_from_url = tag_name['content']
             
             # вставляем в цену пробел через каждые 3 символа
-            price = [price_from_url[::-1][i:i+3] for i in range(0,len(price_from_url),3)][::-1]
+            price = [price_from_url[::-1][i:i+3][::-1] for i in range(0,len(price_from_url),3)][::-1]
 
             # print("price:\t", price)
             return ' '.join(price)

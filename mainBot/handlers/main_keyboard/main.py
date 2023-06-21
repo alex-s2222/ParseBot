@@ -30,12 +30,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.log('USER', f'User:{user_id} add DB')
 
         await update.message.reply_text(
-        'Добро пожаловать в \n <<MyParseAvito>>',
+        'Добро пожаловать в \n<<MyParseAvito>> \n\nВам дана тестовая подписка на 1 день',
         reply_markup=markup)
+
+        out_message = __create_message()
+        await update.message.reply_text(out_message)
+        
     #если пользователь есть в базе данных    
     else:
         await update.message.reply_text(
-            'Добро пожаловать в \n <<MyParseAvito>>',
+            'Добро пожаловать в \n<<MyParseAvito>>',
             reply_markup=markup,
         )
 
@@ -54,3 +58,21 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.log('USER', f'User:{user_id} check info account')
     
     await update.message.reply_text(answer_message)
+
+
+async def support(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    out_message = __create_message()
+
+    await update.message.reply_text(out_message)
+
+
+def __create_message() -> str:
+    MY_ACCOUNT = '@Juzorai'
+    BOT_ACCOUNT = '@My_parse_avito_bot'
+    GROUP_ACCOUNT = 'https://t.me/+Sj_NseMkPHU5NDAy'
+
+    out_message =  f'Новости, улучшения, дополнения, перерывы \n👉{GROUP_ACCOUNT}\n\n' +\
+                    f'Бот для получения уведомлений \n👉{BOT_ACCOUNT}\n\n' +\
+                     f'Если возникли вопросы по использованию или есть пожелания пишите\n👉{MY_ACCOUNT}'
+    
+    return out_message

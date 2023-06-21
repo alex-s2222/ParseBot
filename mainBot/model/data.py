@@ -1,7 +1,7 @@
 from model.create import get_database
 from typing import List
 from loguru import logger
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class DB:
     def insert_default_user(user_id: int, date_now: datetime, date_end: datetime) -> None:
@@ -113,3 +113,32 @@ class DB:
         collection.update_one({'_id': user_id,'urls':{'$elemMatch':{'user_url':user_url}}},{'$set':{'urls.$.title':title}})
 
         logger.log('INFO', f' {user_id} insert title DB')
+
+
+    def admin_set(user_id: int, number_time: int, string_time: str) -> bool:
+        date_time = {'d': timedelta(days=number_time),
+                 'm': timedelta(days=30*number_time),
+                 'w': timedelta(weeks=number_time)}
+
+        collection = get_database()
+        time_now = datetime.now()
+
+        user_data = collection.find_one({'_id': user_id})
+
+        add_data = date_time.get(string_time, 0)
+
+        user_end_subs = user_data['end_subscription']
+        if add_data != 0:  
+            if  user_end_subs < time_now:
+                collection.update_one({'_id': user_id},{'$set': {'end_subscription': time_now + add_data}})
+                return True
+            elif user_end_subs > time_now:
+                collection.update_one({'_id': user_id}, {'$set': {'end_subscription': user_end_subs + add_data }})
+                return True
+        else:
+            False     
+    
+
+    
+
+    
