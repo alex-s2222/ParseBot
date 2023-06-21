@@ -9,6 +9,7 @@ from telegram import (
     ReplyKeyboardMarkup,
 )
 
+from loguru import logger
 from model.data import DB
 from .view import MENUKEYBOARD
 
