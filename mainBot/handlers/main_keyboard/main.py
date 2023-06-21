@@ -53,7 +53,7 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     answer_message = f"Ваш ID: {user_id}\n"+\
                         f"Подписка доступно до: {end_subs.day}.{end_subs.month}.{end_subs.year}\n" +\
-                         f"Количестнов активных задач: {active_urls}"
+                         f"Количестнов активных задач: {active_urls}/5"
     
     logger.log('USER', f'User:{user_id} check info account')
     
