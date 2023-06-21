@@ -98,7 +98,7 @@ class parseUrl:
             price_from_url = tag_name['content']
             
             # вставляем в цену пробел через каждые 3 символа
-            price = [price_from_url[::-1][i:i+3] for i in range(0,len(price_from_url),3)][::-1]
+            price = [price_from_url[::-1][i:i+3][::-1] for i in range(0,len(price_from_url),3)][::-1]
 
             # print("price:\t", price)
             return ' '.join(price)
