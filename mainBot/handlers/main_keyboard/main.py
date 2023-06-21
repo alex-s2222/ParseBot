@@ -30,12 +30,6 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """выводит информацию о аккаунте"""
     user_id = update.message.from_user.id
 
-<<<<<<< HEAD
-    #TODO придумать реализацию (время подписки) && (кол-во активных задач ...придумать логику реализацию)
-    answer_message = f"Ваш ID {user_id}\n"+\
-                        "Подписка доступно до ...\n" +\
-                         "Количестнов активных задач ..."
-=======
     active_urls = len(DB.get_urls(user_id=user_id))
     end_subs = DB.get_user_subsctription(user_id=user_id).date()
 
@@ -44,6 +38,5 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                          f"Количестнов активных задач: {active_urls}/5"
     
     logger.log('USER', f'User:{user_id} check info account')
->>>>>>> f11ddcb (v2.1)
     
     await update.message.reply_text(answer_message)
