@@ -3,5 +3,5 @@ from loguru import logger
 
 
 if __name__ == '__main__':
-    logger.info('Bot starting')
+    logger.debug('Bot starting')
     run()
