@@ -31,17 +31,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send the alarm message."""
+    """Cоздаем задачу для для отправки сообщений"""
     job = context.job
     
     if DB.check_user_subscription(user_id=job.chat_id):
         # если у пользователя нет подписки
         remove_job_if_exists(str(job.chat_id), context)
-        text = 'Оплатите подписку в основном боте, что бы продолжить пользоваться ботом'
+        text = 'Оплатите подписку в основном боте, что бы продолжить пользоваться ботом \n' +\
+                'После оплаты, нажмите /start'
 
         logger.debug(f'User:{job.chat_id} END subscription')
 
         await context.bot.send_message(job.chat_id, text=text)
+        
     else:
         # запускаем парсер
         data_urls = await parseUrl().get_message(user_id=job.chat_id)
@@ -62,7 +64,7 @@ async def create_task(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
-    """Remove job with given name. Returns whether job was removed."""
+    """Удаляем задачу"""
     current_jobs = context.job_queue.get_jobs_by_name(name)
     if not current_jobs:
         return False
