@@ -40,10 +40,11 @@ class DB:
 
 
     def get_user_subsctription(user_id: int) -> datetime:
+        """Получаем информацию когда закончится подписка"""
         collection = get_database()
         user_data = collection.find_one({'_id': user_id})
         
-        logger.log('INFO',f'{user_id} end subs')
+        logger.log('INFO',f'get {user_id} end subs')
         
         return user_data['end_subscription'] 
 
