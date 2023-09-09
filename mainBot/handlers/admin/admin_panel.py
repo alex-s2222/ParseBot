@@ -12,9 +12,10 @@ from telegram import (
     Update,
 )
 
+import os
+
 from model.data import DB
 
-from SETTINGS import USER_ID
 from . import view
 
 START_ROUTES, INPUT_DATA = range(2)
@@ -22,11 +23,12 @@ START_ROUTES, INPUT_DATA = range(2)
 
 async def __admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Введите пароль для входа """
-    user_id = update.message.from_user.id
+    user_id = str(update.message.from_user.id)
 
     time_subs = InlineKeyboardMarkup(view.time_subs_keyboard)
+
     # проверяем id user
-    if user_id == USER_ID:
+    if user_id == os.environ['USER_ID']:
         await update.message.reply_text(text='Админ', reply_markup=view.back_menu)
         await update.message.reply_text(text='Выберете дейсвие', reply_markup=time_subs)
 

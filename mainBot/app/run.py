@@ -5,7 +5,6 @@ from telegram.ext import (
     filters
     )
 
-from SETTINGS import TOKEN
 from handlers.main_keyboard import main
 from handlers.message_keyboard.task.button import tasks
 from handlers.message_keyboard.subscription.button import subscription
@@ -14,8 +13,11 @@ from handlers.admin.admin_panel import admin_panel
 from warnings import filterwarnings
 from telegram.warnings import PTBUserWarning
 
+import os
+
 
 def run():
+    TOKEN = os.environ['TOKEN']
     app = Application.builder().token(TOKEN).build()
     
     
