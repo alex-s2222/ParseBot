@@ -2,12 +2,14 @@ from bs4 import BeautifulSoup
 import aiohttp
 import asyncio 
 import ssl
+import os
 
 from typing import List, Dict
-from loguru import logger
 
-from SETTINGS import FORCED_CIPHERS
 from model.data import DB
+
+
+FORCED_CIPHERS = os.environ['FORCED_CIPHERS']
 
 
 class parseUrl:
