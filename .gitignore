@@ -1,4 +1,7 @@
 /venv
+
 **/__pycache__
 **/.DS_Store
 **/SETTINGS.py
+
+docker-compose.yaml
