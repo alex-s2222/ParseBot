@@ -50,13 +50,15 @@ async def account(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     active_urls = len(DB.get_urls(user_id=user_id))
     end_subs = DB.get_user_subsctription(user_id=user_id).date()
-
-    answer_message = f"Ваш ID: {user_id}\n"+\
-                        f"Подписка доступно до: {end_subs.day}.{end_subs.month}.{end_subs.year}\n" +\
+    
+    answer_message = f"Подписка доступно до: {end_subs.day}.{end_subs.month}.{end_subs.year}\n" +\
                          f"Количестнов активных задач: {active_urls}/5"
     
-    logger.log('USER', f'User:{user_id} check info account')
+    answer_user_id = f"Ваш ID: {user_id}"
     
+    logger.log('USER', f'User:{user_id} check info account')
+   
+    await update.message.reply_text(answer_user_id)
     await update.message.reply_text(answer_message)
 
 

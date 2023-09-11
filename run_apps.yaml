@@ -41,7 +41,7 @@ services:
 
 
     mongodb:
-      image: mongo:latest
+      image: mongo:4.2
       container_name: database
       restart: unless-stopped
       command: mongod --auth
