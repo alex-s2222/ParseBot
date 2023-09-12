@@ -86,6 +86,11 @@ async def __insert_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # сохраняем url от пользовалеля что бы сделать title
     url = update.message.text
     user_data = context.user_data
+
+    # изменяем мобильную вверсию ссылки
+    if 'https://m.avito.ru/' in url:
+        url = url.replace('m', 'www', 1)
+
     user_data['url'] = url
 
     await update.message.reply_text(text="введите описание для введенной ссылки")
@@ -234,7 +239,7 @@ def tasks() -> ConversationHandler:
                     __back_task, pattern="^" + str(ONE) + "$"),
                     
                 #TODO |^(https://m.avito.ru) 
-                MessageHandler(filters.Regex("^(https://www.avito.ru/)"), __insert_url),
+                MessageHandler(filters.Regex("^(https://www.avito.ru/)|^(https://m.avito.ru/)"), __insert_url),
                 MessageHandler(filters.TEXT, __check_insert_url)
             ],
             INPUT_TITLE_FROM_URL: [
