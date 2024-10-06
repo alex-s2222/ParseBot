@@ -4,7 +4,7 @@
 
 Данные сервисы помогают поользователям быстро получать уведомления о новых объявлениях с Avito с помощью телеграмм ботов
 
-## Документация с разными схемами [Documentation](https://github.com/alex-s2222/ParseBot/Documentation/mainBot)
+## Документация с разными схемами [Documentation](https://github.com/alex-s2222/ParseBot/tree/dev/Documentation/mainBot)
 
 ## Перед запуском
 
@@ -20,7 +20,7 @@ git clone https://github.com/alex-s2222/ParseBot.git
 cd ParseBot
 ```
 
-3. Отредактируйте run_apps.yaml 
+3. Отредактируйте [run_apps.yaml](https://github.com/alex-s2222/ParseBot/blob/dev/run_apps.yaml)
 
 ```text
 #MONGO_USER              -> Пользователь в MongoDB
