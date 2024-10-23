@@ -35,7 +35,7 @@ cd ParseBot
 1. Запуск сервисов (для запуска в фоновом режиме установите флаг -d)
 
 ```text
-docker compose up -f run_apps.yaml --build
+docker compose -f run_apps.yaml up --build
 ```
 
 ## Полезные команды
